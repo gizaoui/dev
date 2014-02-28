@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="corporation.xsd">
+
+	<Adresse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:c="http://namespace.com/CommonTypes">
+		<Name>Corporation MegaX</Name>
+		<DeliveryAddress>
+			<c:Line1>15 Some Road</c:Line1>
+			<c:Line2>SomeTown</c:Line2>
+		</DeliveryAddress>
+	</Adresse>
+
+	<Corporation>
+		<Name>Corporation MegaX</Name>
+		<Phone>1-800-555-1212</Phone>
+		<Fax>1-877-555-1212</Fax>
+		<Address>512 Megacorp Way, Gotham City</Address>
+	</Corporation>
+
+	<People>
+
+		<!-- The Boss -->
+		<Employee TaxStatus="US-W2" Gender="Male" Desc="OnSite">
+			<Name>Mr Grand Kahuna</Name>
+			<US-W2>
+				<EmpNumber>1</EmpNumber>
+				<Manager>None</Manager>
+				<YearStart>1998</YearStart>
+			</US-W2>
+			<Data>
+				<WorkPhone>1-800-555-1213</WorkPhone>
+				<CellPhone>1-800-555-1214</CellPhone>
+				<Address>100 Cherry Hill Lane, Gotham City</Address>
+			</Data>
+		</Employee>
+
+		<!-- The Consultant -->
+		<Employee TaxStatus="US-1099" Gender="Male" Desc="OnSite">
+			<Name>Mr Special Tee</Name>
+			<US-1099>
+				<SsnNumber>123-45-6788</SsnNumber>
+				<Phone>1-817-555-1212</Phone>
+				<CorpName>ABC Consulting</CorpName>
+				<CorpAddress>3 Mockingbird Lane, Smallville AK</CorpAddress>
+				<Relationship>CorpToIndividual</Relationship>
+			</US-1099>
+			<Data>
+				<WorkPhone>1-800-555-1215</WorkPhone>
+				<CellPhone>1-800-555-1216</CellPhone>
+				<Address>200 Lookout Hill, Gotham City</Address>
+			</Data>
+		</Employee>
+
+		<!-- The Secratary -->
+		<Employee TaxStatus="US-W2" Gender="Female" Desc="OnSite">
+			<Name>Mrs Jenny Reliable</Name>
+			<US-W2>
+				<EmpNumber>2</EmpNumber>
+				<Manager>Mr Grand Kahuna</Manager>
+				<YearStart>1999</YearStart>
+			</US-W2>
+			<Data>
+				<WorkPhone>1-800-555-1217</WorkPhone>
+				<CellPhone>1-800-555-1218</CellPhone>
+				<Address>300 Riverside View, Gotham City</Address>
+			</Data>
+		</Employee>
+
+	</People>
+</root>

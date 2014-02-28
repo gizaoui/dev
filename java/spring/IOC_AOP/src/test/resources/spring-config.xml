@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- ANNOTATIONS POUR L'INJECTION DE DÃ‰PENDANCES -->
+<!-- 	<context:annotation-config /> -->
+
+
+	<!-- ANNOTATIONS POUR AOP -->
+<!-- 	<aop:aspectj-autoproxy /> -->
+	
+	
+	<bean id="jardinier" class="org.springgarden.implement.Jardinier">
+		<property name="nom" value="TEST NOM" />
+	</bean>
+
+	<!-- JARDIN -->
+	<bean id="jardin" class="org.springgarden.implement.Jardin" init-method="jardiner">
+		<property name="jardinier" ref="jardinier" />
+		<property name="doseEau" value="#{ T(java.lang.Math).random() * 100 }" />
+		<property name="doseEngrais" value="#{ T(java.lang.Math).random() * 50 }" />
+		
+		<property name="parcelles">
+			<list>
+				<ref bean="potager" />
+				<ref bean="verger" />
+			</list>
+		</property>
+		
+	</bean>
+
+
+	<!-- POTAGER -->
+	<bean id="potager" class="org.springgarden.implement.Parcelle" init-method="melanger">
+		<property name="nom" value="Potager" />
+			<property name="plantes">
+				<list>
+					<ref bean="tomate" />
+					<ref bean="patate" />
+					<ref bean="patateMalade" />
+					<ref bean="choux" />
+					<ref bean="choux" />
+				</list>
+		</property>
+	</bean>
+	
+	<!-- VERGER -->
+	<bean id="verger" class="org.springgarden.implement.Parcelle" init-method="melanger">
+		<property name="nom" value="Verger" />
+			<property name="plantes">
+				<list>
+					<ref bean="pomme" />
+					<ref bean="poireMalade" />
+					<ref bean="poire" />
+				</list>
+		</property>
+	</bean>
+	
+		<!-- ANNOTATIONS POUR LA CREATION DE BEANS -->
+	<context:component-scan base-package="org.springgarden.implement" />
+	
+	<bean id="tomate" parent="plante" scope="prototype" p:nomPlante="Tomate" />
+	<bean id="patate" parent="plante" scope="prototype" p:nomPlante="Patate" />
+	<bean id="choux" parent="plante" scope="prototype" p:nomPlante="Choux" />
+	<bean id="pomme" parent="plante" scope="prototype" p:nomPlante="Pomme" />
+	<bean id="poire" parent="plante" scope="prototype" p:nomPlante="Poire" />
+	<bean id="poireMalade" parent="plante" scope="prototype" p:nomPlante="PoireMalade" />
+	<bean id="patateMalade" parent="plante" scope="prototype" p:nomPlante="PatateMalade" />
+
+	
+	<!-- Config. AOP -->
+	
+	<bean id="MessageLogger"
+		class="org.springgarden.implement.Intercept" />
+			
+	<aop:config>
+	
+ 		<aop:pointcut id="servicePointcut"
+			expression="execution(* org.springgarden.implement.Jardinier.*(..))" />
+
+		<aop:aspect id="loggingAspect" ref="MessageLogger">
+			<aop:before method="logMethodEntry" pointcut-ref="servicePointcut" />
+			<aop:after-returning method="logMethodExit"	returning="result" pointcut-ref="servicePointcut" />
+		</aop:aspect> 
+		
+	</aop:config>
+	
+
+
+	
+</beans>

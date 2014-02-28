@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="messg"
+ targetNamespace="http://localhost:8080/messg.wsdl"
+ xmlns:tns="http://localhost:8080/messg.wsdl"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:ns1="http://tempuri.org/ns1.xsd"
+ xmlns:ns="urn:messg"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:HTTP="http://schemas.xmlsoap.org/wsdl/http/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="http://tempuri.org/ns1.xsd"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns1="http://tempuri.org/ns1.xsd"
+  xmlns:ns="urn:messg"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="urn:messg"/>
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="Subset"><!-- ns1__Subset -->
+
+   <sequence>
+     <element name="val" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns1__Subset::val -->
+     <element name="str" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns1__Subset::str -->
+   </sequence>
+  </complexType>
+ </schema>
+
+ <schema targetNamespace="urn:messg"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns1="http://tempuri.org/ns1.xsd"
+  xmlns:ns="urn:messg"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <!-- operation request element -->
+  <element name="param-1" type="xsd:int"/>
+  <!-- operation request element -->
+  <element name="param-2" type="xsd:string"/>
+  <!-- operation response element -->
+  <element name="nombre" type="xsd:int"/>
+  <!-- operation response element -->
+  <element name="chaine" type="xsd:string"/>
+  <!-- operation response element -->
+  <element name="vecteur" type="xsd:int"/>
+  <!-- operation response element -->
+  <element name="vecteur2" type="ns1:Subset"/>
+  <!-- operation request element -->
+  <element name="param-3" type="xsd:int"/>
+  <!-- operation response element -->
+  <element name="param-4" type="xsd:string"/>
+ </schema>
+
+</types>
+
+<message name="test1">
+ <part name="param-1" element="ns:param-1"/><!-- ns__test1::_param_1 -->
+ <part name="param-2" element="ns:param-2"/><!-- ns__test1::_param_2 -->
+</message>
+
+<message name="messgResponse">
+ <part name="nombre" element="ns:nombre"/><!-- ns__test1::nombre -->
+ <part name="chaine" element="ns:chaine"/><!-- ns__test1::chaine -->
+ <part name="vecteur" element="ns:vecteur"/><!-- ns__test1::vecteur -->
+ <part name="vecteur2" element="ns:vecteur2"/><!-- ns__test1::vecteur2 -->
+</message>
+
+<message name="test2Request">
+ <part name="param-3" element="ns:param-3"/><!-- ns__test2::_param_3 -->
+</message>
+
+<message name="test2Response">
+ <part name="param-4" element="ns:param-4"/><!-- ns__test2::_param_4 -->
+</message>
+
+<portType name="messgPortType">
+ <operation name="test1">
+  <documentation>Service definition of function ns__test1</documentation>
+  <input message="tns:test1"/>
+  <output message="tns:messgResponse"/>
+ </operation>
+ <operation name="test2">
+  <documentation>Service definition of function ns__test2</documentation>
+  <input message="tns:test2Request"/>
+  <output message="tns:test2Response"/>
+ </operation>
+</portType>
+
+<binding name="messg" type="tns:messgPortType">
+ <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="test1">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal" namespace="urn:messg"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal" namespace="urn:messg"/>
+  </output>
+ </operation>
+ <operation name="test2">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal" namespace="urn:messg"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal" namespace="urn:messg"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="messg">
+ <documentation>gSOAP 2.8.17r generated service definition</documentation>
+ <port name="messg" binding="tns:messg">
+  <SOAP:address location="http://localhost:8080/messgserver"/>
+ </port>
+</service>
+
+</definitions>

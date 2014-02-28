@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+
+	<!-- === CREATION DE LA TABLE PERSON AU DEMARRAGE === -->
+	<bean id="dbUtil" class="net.codejava.hibernate.util.DbUtil"
+		init-method="initialize">
+		<property name="dataSource" ref="dataSource_mysql" />
+	</bean>
+
+
+	<bean id="manageService" class="net.codejava.hibernate.service.ManageService">
+		<property name="manageDao" ref="manageDao" />
+	</bean>
+
+
+	<bean id="manageDao" class="net.codejava.hibernate.dao.ManageDao">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+
+		<property name="dataSource" ref="dataSource_mysql" />
+
+		<property name="mappingResources">
+			<list>
+				<value>Product.hbm.xml </value>
+				<value>ProductDetail.hbm.xml </value>
+			</list>
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+				<prop key="hibernate.current_session_context_class">thread</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+
+	</bean>
+
+
+
+
+
+	<!-- ====================================================================== 
+		CONNEXIONS ====================================================================== -->
+
+
+	<!-- ================== Configuration connexion MySQL ================== -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>database.properties</value>
+		</property>
+	</bean>
+
+	<bean id="dataSource_mysql"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+
+</beans>  

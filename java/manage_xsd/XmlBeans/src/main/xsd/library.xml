@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<lib:library xmlns:lib="http://namespace.com/library.xsd">
+<!-- 
+protected Forward begin() throws Exception {
+
+    LibraryDocument doc = LibraryDocument.Factory.parse(
+        new java.net.URL("http://localhost:7001/BasicAppWeb/library.xml"));
+ 
+    Library lib = doc.getLibrary();
+    Book books[] = lib.getBookArray();
+ 
+    getRequest().setAttribute("books", books);
+ 
+    return new Forward("success");
+}
+ -->
+	<lib:book>
+		<lib:title>2001 Space Oddyssey</lib:title>
+		<lib:isbn>0451457994</lib:isbn>
+		<lib:author>
+			<lib:name>Arthur C. Clarke</lib:name>
+		</lib:author>
+	</lib:book>
+
+	<lib:book>
+		<lib:title>BEA WebLogic Workshop 8.1 Kick Start</lib:title>
+		<lib:isbn>0672326221</lib:isbn>
+		<lib:author>
+			<lib:name>Albert J. Saganich</lib:name>
+		</lib:author>
+		<lib:author>
+			<lib:name>Tom Hardy</lib:name>
+		</lib:author>
+	</lib:book>
+
+</lib:library> 

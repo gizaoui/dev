@@ -1,0 +1,1 @@
+<service name="author" component="office"><author amount="000000010000" origin="BACK_PAR" cvv_key="" cvv_flag="0" card_type="CA" card_number="5132839000000027" merchant_id="012132156456456" card_validity="200804" currency_code="978" transaction_id="000302" merchant_country="fr"/></service>

@@ -1,0 +1,14 @@
+#################################################
+## TABLE DE CONVERSION (Amadeus -> Sips) ##
+#################################################
+
+# SipsCde (values) | AmadeusCde (keys) | Descr
+02;22462,23019;Referral
+05;23020,23021;Autorisation Refusée
+12;;Transaction invalide (un des champs est invalide)
+14;;Numéro de carte invalide
+40;;Fonction non supportée: droits non donnés au commerçant
+63;6612;Erreur de sécurité
+90;22377;Problème temporaire sur le serveur
+94;;Transaction dupliquée
+99;;Problème temporaire sur le serveur

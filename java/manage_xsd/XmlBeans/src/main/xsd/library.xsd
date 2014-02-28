@@ -1,0 +1,33 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://namespace.com/library.xsd" 
+	targetNamespace="http://namespace.com/library.xsd"
+	xmlns:lib="http://namespace.com/library.xsd" 
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<xs:complexType name="author">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="book">
+		<xs:sequence>
+			<xs:element name="title" type="xs:string" />
+			<xs:element name="isbn" type="xs:string" />
+			<xs:element name="author" type="lib:author" minOccurs="1"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- A library is a sequence of book elements -->
+	<xs:element name="library">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="book" type="lib:book" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

@@ -1,0 +1,79 @@
+<project name="sips" basedir="." default="OPTION">
+
+    <property name="src.dir"     value="${basedir}/src"/>
+    <property name="lib.dir"     value="${basedir}/lib"/>
+    <property name="build.dir"   value="${basedir}/build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir"     value="${build.dir}/jar"/>
+
+
+    <property name="main-class"  value="sips.Start"/>
+
+    <!-- 'lib' pour execution du jar -->
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+               <attribute name="Main-Class" value="${main-class}"/>
+               <attribute name="Class-Path" value="${lib.dir}/log4j-1.2.15.jar "/>
+            </manifest>
+        </jar>
+    </target>
+
+
+<!-- java -jar build/jar/sips.jar localhost 31001 0 author.xml -->
+    <target name="author" depends="jar">
+	<java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
+	   <arg value="localhost"/>  <!-- machine -->
+	   <arg value="31001"/>      <!-- port -->
+           <arg value="0"/>          <!-- timer en ms (boucle si >0) -->
+           <arg value="author.xml"/> <!-- message xml -->
+        </java>
+    </target>
+
+    <target name="advice" depends="jar">
+	<java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
+	   <arg value="localhost"/>  <!-- machine -->
+	   <arg value="31001"/>      <!-- port -->
+           <arg value="0"/>          <!-- timer en ms (boucle si >0) -->
+           <arg value="advice.xml"/> <!-- message xml -->
+        </java>
+    </target>
+
+    <target name="cancel" depends="jar">
+	<java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
+	   <arg value="localhost"/>  <!-- machine -->
+	   <arg value="31001"/>      <!-- port -->
+           <arg value="0"/>          <!-- timer en ms (boucle si >0) -->
+           <arg value="cancel.xml"/> <!-- message xml -->
+        </java>
+    </target>
+
+
+    <target name="OPTION">
+        <echo message="- ant jar : compile et génère le jar"/>
+        <echo message="- ant author : java -jar build/jar/sips.jar localhost 31001 0 author.xml"/>
+        <echo message="- ant advice : java -jar build/jar/sips.jar localhost 31001 0 advice.xml"/>
+        <echo message="- ant cancel : java -jar build/jar/sips.jar localhost 31001 0 author.xml"/>
+    </target>
+
+
+</project>
+

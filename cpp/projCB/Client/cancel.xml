@@ -1,0 +1,1 @@
+<service name="cancel" component="office"><cancel amount="000000001000" origin="3333333333333333" merchant_id="012132156456456" payment_date="20061013" currency_code="978" transaction_id="000307" merchant_country="fr"/></service>

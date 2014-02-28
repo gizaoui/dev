@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="net.codejava.hibernate.domaine">
+
+	<class name="Famille" table="FAMILLE">
+
+
+		<id name="id" column="FAMILLE_ID">
+			<generator class="native" />
+		</id>
+		<property name="name" column="NAME" />
+		
+		<set name="articles" table="FAMILLEARTICLE" cascade="all">
+			<key column="FAMILLE_ID" not-null="true" />
+			<many-to-many column="ARTICLE_ID" class="Article"
+				unique="true" />
+		</set>
+
+	</class>
+</hibernate-mapping>        

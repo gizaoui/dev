@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:cmn="http://namespace.com/CommonTypes" 
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+<!-- cf : http://www.codeguru.com/java/article.php/c13529/XSD-Tutorial-XML-Schemas-For-Beginners.htm#page-4 -->
+	<xs:import schemaLocation="CommonTypes.xsd" namespace="http://namespace.com/CommonTypes" />
+
+	<xs:element name="root">
+		<xs:complexType>
+			<xs:sequence>
+
+
+				<xs:element name="Adresse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xs:string" />
+							<xs:element name="DeliveryAddress" type="cmn:AddressType" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+
+				<xs:element name="Corporation">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xs:string" />
+							<xs:element name="Phone" type="xs:string" />
+							<xs:element name="Fax" type="xs:string" />
+							<xs:element name="Address" type="xs:string" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+
+
+
+				<xs:element name="People">
+					<xs:complexType>
+						<xs:sequence>
+
+							<xs:element name="Employee" maxOccurs="unbounded">
+								<xs:complexType>
+
+
+									<xs:sequence>
+
+										<!-- NAME : deux choix d'insertion possibles -->
+										<xs:element name="Name" type="xs:string" />
+										<xs:choice>
+
+											<!-- Premier choix d'insertion (spécifier la balise '<US-W2>') -->
+											<xs:element name="US-W2">
+												<xs:complexType mixed="true">
+													<xs:sequence>
+														<xs:element name="EmpNumber" type="xs:int" />
+														<xs:element name="Manager" type="xs:string" />
+														<xs:element name="YearStart" type="xs:string" />
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+
+											<!-- Second choix d'insertion (spécifier la balise '<US-1099>') -->
+											<xs:element name="US-1099">
+												<xs:complexType mixed="true">
+													<xs:sequence>
+														<xs:element name="SsnNumber" type="xs:string" />
+														<xs:element name="Phone" type="xs:string"
+															default="1-800-555-1212" />
+														<xs:element name="CorpName" type="xs:string" />
+														<xs:element name="CorpAddress" type="xs:string" />
+														<xs:element name="Relationship" type="ERelation" />
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:choice>
+
+										<!-- DATA : un seul choix d'insertion possibles -->
+										<xs:element name="Data">
+											<xs:annotation>
+												<xs:documentation>Data: personel data.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType mixed="false">
+												<xs:sequence>
+													<xs:element name="WorkPhone" type="xs:string"
+														default="1-800-555-1212" />
+													<xs:element name="CellPhone" type="xs:string"
+														default="1-800-555-1212" />
+													<xs:element name="Address" type="xs:string"
+														default="NULL" />
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+
+									</xs:sequence>
+
+
+									<xs:attribute name="TaxStatus" type="ETaxStatus"
+										use="required" />
+									<xs:attribute name="Gender" type="EGender" use="required" />
+									<xs:attribute name="Desc" type="ELocation" use="required" />
+
+								</xs:complexType>
+
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	<xs:simpleType name="EGender">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Male" />
+			<xs:enumeration value="Female" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ELocation">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OnSite" />
+			<xs:enumeration value="OffSite" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ETaxStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="US-W2" />
+			<xs:enumeration value="US-1099" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
+	<xs:simpleType name="ERelation">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CorpToCorp" />
+			<xs:enumeration value="CorpToIndividual" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>
+
