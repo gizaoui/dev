@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+
+
+    <bean id="dbUtil" class="fr.ac.sirhen.easi.implement.DbUtil">
+        <property name="dataSource" ref="dataSource_mysql"/>
+
+        <property name = "initQueryList">
+            <list>
+                <value>TRUNCATE TABLE STAT</value>
+                <value>ALTER TABLE STAT AUTO_INCREMENT=1</value>
+            </list>
+        </property>
+
+    </bean>
+
+
+    <bean id="connexion" class="fr.ac.sirhen.easi.implement.Connexion" depends-on="dbUtil" init-method="Initialize"
+          destroy-method="Finalize">
+
+        <!-- ============  LOCAL (Option par défaut si paramètre 'browser' défini ) ============  -->
+        <property name="browser" value="/opt/browserdriver/geckodriver"/>
+        <property name="binary" value="/bin/firefox"/>
+        <!--<property name="binary" value="/opt/firefox/firefox/firefox"/> -->
+
+        <!-- ============  REMOTE  ============ -->
+        <property name="remoteWebDriver" value="http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxx:5555/wd/hub"/>
+        <!--<property name="remoteWebDriver" value="http://localhost:5555/wd/hub"/>-->
+        <property name="remoteBrowser" value="firefox"/>
+        <property name="port" value="9080"/>
+
+        <!-- ============  COMMMUN ============  -->
+        <property name="timeout" value="60"/>
+        <property name="stepSleep" value="1000"/>
+    </bean>
+
+
+    <bean id="commum" class="fr.ac.sirhen.easi.implement.Commum" depends-on="connexion" init-method="Initialize">
+        <property name="connexion" ref="connexion"/>
+        <property name="dbUtil" ref="dbUtil"/>
+        <property name="dteStart" value="15/10/2017"/>
+        <property name="stat" value="true"/>
+        <property name="urlApi" value="http://xxxxxxxxxxxxxxxxxxxxxxxxxx/easici/idBase"/>
+        <property name="lstAgent" value="//select[@formcontrolname='idAgent']/option"/>
+    </bean>
+
+
+
+
+
+    <!--
+    ==========================================================
+                            ECRANS
+    ==========================================================         -->
+
+    <!-- 01 :   -->
+    <bean id="authentification" class="fr.ac.sirhen.easi.implement.Ecran.Authentification">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="url"
+                  value="http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/accueil"/>
+
+        <property name="userXpath" value="//input[@name='user']"/>
+        <property name="passwdXpath" value="//input[@name='password']"/>
+        <property name="passwd" value="xxxxx"/>
+
+        <property name="directeur" value="true"/> <!-- Directeur (true) / Administrateur (false)  -->
+        <property name="userDir" value="cchefEtab"/>
+        <property name="userAdm" value="cbibes"/>
+    </bean>
+
+
+    <!-- 02 :   -->
+    <bean id="espaceGestionnaire" class="fr.ac.sirhen.easi.implement.Ecran.EspaceGestionnaire"
+          depends-on="authentification">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnValider" value="//input[@class='bouton']"/>
+        <property name="hrefDeploiRemplacement" value="//a[@title='Remplacement']"/>
+       <!-- <property name="hrefRemplacement" value="Remplacement"/> -->
+    </bean>
+
+
+    <!-- 03 :   -->
+    <bean id="listeDemandesSuppleances" class="fr.ac.sirhen.easi.implement.Ecran.ListeDemandesSuppleances"
+          depends-on="espaceGestionnaire">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="url"
+                  value="http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/#/dossier?pa=mapi-cdm-easi-de-consult"/>
+        <!-- <property name="hrefSuppleance" value="Créer ou consulter les demandes de suppléance de l'établissement"/> -->
+        <property name="waitUserConn" value="//div[@class='col-md-2']/h4[contains(.,'chefEtab')]"/>
+    </bean>
+
+
+    <!-- 04 :   -->
+    <bean id="declarerAbsence" class="fr.ac.sirhen.easi.implement.Ecran.DeclarerAbsence">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnDemanderSuppleance" value="//button[contains(.,'Demander')]"/>
+        <property name="waitListEtablissement" value="//tbody[count(tr[@class='rowSelectable'])>0]"/>
+        <property name="waitUserConn" value="//div[@class='col-md-2']/h4[contains(.,'chefEtab')]"/>
+        <!--<property name="waitMenuRechercher" value="//div[contains(text(),&quot;Rechercher l'établissement&quot;)]/i"/>-->
+        <property name="waitMenuRechercher" value="//div[@class=&quot;panel-body card-block card-body&quot;]/div/accordion-group/div/div[1]/div/div/div/i"/>
+    </bean>
+
+
+    <!-- 05 :   -->
+    <bean id="selectionEtablissement" class="fr.ac.sirhen.easi.implement.Ecran.SelectionEtablissement">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="menuRechercher" value="//div[@class=&quot;panel-body card-block card-body&quot;]/div/accordion-group/div/div[1]/div/div/div/i"/>
+
+        <!--<property name="menuRechercher" value="//div[contains(text(),&quot;Rechercher l'établissement&quot;)]/i"/>-->
+        <!--<property name="openMenuRechercher" value="//div[contains(text(),&quot;Rechercher l'établissement&quot;)]/parent::div/parent::div/parent::div"/>-->
+
+        <property name="btnPremiere" value="//a[@class=&quot;page-link&quot; and text()=&quot;Premier&quot;]"/>
+        <property name="btnSuivant" value="//a[@class=&quot;page-link&quot; and contains(text(),&quot;Suivant&quot;)]"/>
+        <property name="lstEtablissement" value="//tbody/tr[@class='rowSelectable']/td[position()=1]"/>
+        <property name="btnEtablissement" value="//tbody/tr[@class='rowSelectable']"/>
+        <property name="waitLstAgent" value="//select[@formcontrolname='idAgent'][count(option)>1]"/>
+    </bean>
+
+
+    <!-- 06 :  Déclarer absence / demande de suppléance  -->
+    <bean id="selectionAgentsAbsent" class="fr.ac.sirhen.easi.implement.Ecran.SelectionAgentsAbsent">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnAgent" value="//select[@formcontrolname='idAgent']/option"/>
+        <property name="quotite" value="//label[contains(.,'Quotité')]/parent::div/div"/>
+        <property name="btnDteDeb" value="//label[contains(.,'Début')]/parent::div/descendant::input[@aria-label='Date input field']"/>
+        <property name="btnDteFin" value="//label[contains(.,'Fin')]/parent::div/descendant::input[@aria-label='Date input field']"/>
+        <property name="btnMotif" value="//select[@formcontrolname='motif']/option[position()=9]"/>
+        <property name="validJourAbs" value="//td[@title='Non travaillé']"/>
+    </bean>
+
+
+    <!-- 07 :  Gestion des Suppléants  -->
+    <bean id="gestionSuppleants" class="fr.ac.sirhen.easi.implement.Ecran.GestionSuppleants">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnSuppleant" value="//button[contains(.,'Suppléant')]"/>
+        <property name="waitAgentSelect" value="//div[@class='panel-heading']/b[position()=1 and string-length(text())>4]"/>
+    </bean>
+
+
+    <!-- 08 : Choix des suppléants (popup)  -->
+    <bean id="choixSuppleants" class="fr.ac.sirhen.easi.implement.Ecran.ChoixSuppleants">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnAjoutModifSupp" value="//button[@class='btn btn-primary cst-toper' and contains(.,'Suppléants')]"/>
+        <property name="waitLstChoixSuppPopup" value= "//div[@class='panel-heading' and contains(.,'suppléants')]/parent::div/descendant::tbody[count(tr)>2]"/>
+    </bean>
+
+
+    <!-- 09 :   -->
+    <bean id="selectionSuppleant" class="fr.ac.sirhen.easi.implement.Ecran.SelectionSuppleant">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnPremier" value="//a[@class=&quot;page-link&quot; and text()=&quot;Premier&quot;]"/>
+        <property name="fldDemiJour" value="//input[@placeholder=&quot;Nombre de demi-journées possibles&quot;]"/>
+        <property name="btnTriNom" value="//table-header/div[contains(.,'Nom Usage')]"/>
+        <property name="btnSuivant" value="//a[@class=&quot;page-link&quot; and contains(text(),&quot;Suivant&quot;)]"/>
+        <property name="btnLstSuppleant" value="//div[@class='panel-heading' and contains(.,'suppléants')]/parent::div/descendant::tbody/tr[@class='rowSelectable']"/>
+    </bean>
+
+    <!-- 10 :   -->
+    <bean id="sauvegardeGestionSuppleants" class="fr.ac.sirhen.easi.implement.Ecran.SauvegardeGestionSuppleants">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnSauvegarder" value="//button[contains(.,'Sauvegarder')]"/>
+        <property name="waitEmail" value="//label[contains(.,&quot;Email&quot;)]/parent::div/div[string-length(text())>4]"/>
+    </bean>
+
+    <!-- 11 :   -->
+    <bean id="envoyerGestionSuppleants" class="fr.ac.sirhen.easi.implement.Ecran.EnvoyerGestionSuppleants">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnEnvoyer" value="//button[contains(.,'Envoyer')]"/>
+        <property name="waitUserConn" value="//div[@class='col-md-2']/h4[contains(.,'chefEtab')]"/>
+    </bean>
+
+    <!-- 12 :   -->
+    <bean id="retour" class="fr.ac.sirhen.easi.implement.Ecran.Retour">
+        <property name="connexion" ref="connexion"/>
+        <property name="commum" ref="commum"/>
+        <property name="btnRetour" value="//div[@class='text-right cst-form-footer']/button[contains(.,'Retour')]"/>
+        <property name="waitPopup" value="//div[@class='modal fade in' and @aria-hidden='false']"/>
+        <property name="btnPopupNon" value="//div[contains(text(),'Souhaitez-vous sauvegarder les modifications effectuées')]/parent::div/div/button[contains(.,'Non')]"/>
+    </bean>
+
+
+    <!-- ================== Configuration connexion MySQL ================== -->
+
+    <bean
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>database.properties</value>
+        </property>
+    </bean>
+
+    <bean id="dataSource_mysql"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${MySQL.driverClassName}"/>
+        <property name="url" value="${MySQL.url}"/>
+        <property name="username" value="${MySQL.username}"/>
+        <property name="password" value="${MySQL.password}"/>
+    </bean>
+
+
+</beans>
