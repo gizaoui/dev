@@ -44,7 +44,7 @@ int main ( void ) {
     cp = &A; // Pointe sur A
     // => *cp=45; // ERREUR
 
-	// ---------------------------------
+    // ---------------------------------
 	
     char *r = "RRR";
     char **a = &r;
@@ -61,7 +61,34 @@ int main ( void ) {
     printf("%s %s %s\n", *a, b, e); // FFFFFF BBBBBBB CCCCCCCCCC
     free(c);
 	
+// ---------------------------------
+	
+  char c[3];
+  c[0] = 'A';
+  c[1] = 'A';
+  c[2] = 'A';
+  printf("%d\n", sizeof(c));
 
+  unsigned char *b = (unsigned char *)&c;
+  int i, j;
+  for (i = sizeof(c) - 1; i >= 0; --i) {
+    for (j = 7; j >= 0; --j) {
+      printf("%u", (b[i] >> (j)) & 1);
+    }
+    printf(" ");
+  }
+  printf("\n");
+	
+ // 01000001 01000001 01000001 
+
+  // ---------------------------------
+	
+  char str[] = "memmove can be very useful......";
+  printf("Les %d premiers caractères de la chaîne '%s'\n\
+doivent être copiés à partir du premier caractère de la chaîne '%s'\n", 11, str + 15, str + 20);
+  printf("\nOn obtient : '%s' -> ", str);
+  memmove(str + 20, str + 15, 11);
+  printf("'%s'\n", str); // On obtient : 'memmove can be very useful......' -> 'memmove can be very very useful.'
 
     return EXIT_SUCCESS;
 }
