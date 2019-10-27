@@ -44,6 +44,8 @@ int main ( void ) {
     cp = &A; // Pointe sur A
     // => *cp=45; // ERREUR
 
+	// ---------------------------------
+	
     char *r = "RRR";
     char **a = &r;
     char **f = &r;
