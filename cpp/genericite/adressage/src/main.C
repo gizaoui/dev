@@ -86,9 +86,13 @@ int main ( void ) {
   char str[] = "memmove can be very useful......";
   printf("Les %d premiers caractères de la chaîne '%s'\n\
 doivent être copiés à partir du premier caractère de la chaîne '%s'\n", 11, str + 15, str + 20);
+// Les 11 premiers caractères de la chaîne 'very useful......'
+// doivent être copiés à partir du premier caractère de la chaîne 'useful......'
+
   printf("\nOn obtient : '%s' -> ", str);
   memmove(str + 20, str + 15, 11);
-  printf("'%s'\n", str); // On obtient : 'memmove can be very useful......' -> 'memmove can be very very useful.'
+  printf("'%s'\n", str); 
+// On obtient : 'memmove can be very useful......' -> 'memmove can be very very useful.'
 
     return EXIT_SUCCESS;
 }
