@@ -44,6 +44,21 @@ int main ( void ) {
     cp = &A; // Pointe sur A
     // => *cp=45; // ERREUR
 
+    char *r = "RRR";
+    char **a = &r;
+    char **f = &r;
+    char *b = "BBBBBBB";
+
+    r = "AAAAAAA";
+    *f = "FFFFFF";
+
+    char *c = (char *)malloc(20);
+    sprintf(c, "%s\0", "CCCCCCCCCC");
+    char **d = &c;
+    char *e = c;
+    printf("%s %s %s\n", *a, b, e);
+    free(c);
+	
 
 
     return EXIT_SUCCESS;
