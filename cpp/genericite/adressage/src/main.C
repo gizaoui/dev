@@ -58,7 +58,7 @@ int main ( void ) {
     sprintf(c, "%s\0", "CCCCCCCCCC");
     char **d = &c;
     char *e = c;
-    printf("%s %s %s\n", *a, b, e);
+    printf("%s %s %s\n", *a, b, e); // FFFFFF BBBBBBB CCCCCCCCCC
     free(c);
 	
 
