@@ -8,7 +8,6 @@
 #ifndef INCLUDE_CMEMLEAK_H_
 #define INCLUDE_CMEMLEAK_H_
 
-
 void XWBReportFinal(void);
 
 static const char xwbProtect[] = "DeAd";
@@ -64,24 +63,6 @@ static struct XWBNode* XWBNodeNew(void) {
 }
 
 /*******************************************************************************
- * Delete node
- *******************************************************************************/
-static void XWBNodeDelete(struct XWBNode* that) {
-	if (that->mPrev) that->mPrev->mNext = that->mNext;
-	if (that->mNext) that->mNext->mPrev = that->mPrev;
-	free(that);
-}
-
-/*******************************************************************************
- * Free a node
- *******************************************************************************/
-static void XWBNodeFree(struct XWBNode* that, const char* iName, const char* iFile, const unsigned int iLine) {
-	that->mFile = iFile;
-	that->mLine = iLine;
-	that->mName = iName;
-}
-
-/*******************************************************************************
  * Link up node
  *******************************************************************************/
 static void XWBNodeLink(struct XWBNode* that, struct XWBNode* iPrev, struct XWBNode* iNext) {
@@ -89,16 +70,6 @@ static void XWBNodeLink(struct XWBNode* that, struct XWBNode* iPrev, struct XWBN
 	if (iPrev != 0) iPrev->mNext = that;
 	that->mNext = iNext;
 	if (iNext != 0) iNext->mPrev = that;
-}
-
-/*******************************************************************************
- * Set up node
- *******************************************************************************/
-static void XWBNodeSet(struct XWBNode* that, void* iPtr, const unsigned int iSize, const char* iFile, const unsigned int iLine) {
-	that->mPtr = iPtr;
-	that->mSize = iSize;
-	that->mFile = iFile;
-	that->mLine = iLine;
 }
 
 /*******************************************************************************
@@ -114,7 +85,6 @@ static void XWBMemNew(void) {
 	xwbMem.mAllocUsed = 0L;
 	xwbMem.mAllocTotal = 0L;
 	xwbMem.mAllocCurrent = 0L;
-
 	xwbMem.mFree = 1;
 
 #ifdef TRCINFILE
@@ -122,8 +92,17 @@ static void XWBMemNew(void) {
 #else
 	xwbMem.mReport = 0;
 #endif
-
 	// atexit(XWBReportFinal);
+}
+
+/*******************************************************************************
+ * Set up node
+ *******************************************************************************/
+static void XWBNodeSet(struct XWBNode* that, void* iPtr, const unsigned int iSize, const char* iFile, const unsigned int iLine) {
+	that->mPtr = iPtr;
+	that->mSize = iSize;
+	that->mFile = iFile;
+	that->mLine = iLine;
 }
 
 /*******************************************************************************
@@ -148,6 +127,7 @@ void XWBMemInsert(void* iPtr, const unsigned int iSize, const char* iFile, const
  * Find a memory pointer
  *******************************************************************************/
 static struct XWBNode* XWBMemFind(void* iPtr, unsigned int* oSize, const char** oFile, unsigned int* oLine) {
+
 	struct XWBNode* result = 0;
 	struct XWBNode* iter;
 
@@ -165,9 +145,30 @@ static struct XWBNode* XWBMemFind(void* iPtr, unsigned int* oSize, const char** 
 }
 
 /*******************************************************************************
+ * Delete node
+ *******************************************************************************/
+static void XWBNodeDelete(struct XWBNode* that) {
+	if (that->mPrev) that->mPrev->mNext = that->mNext;
+	if (that->mNext) that->mNext->mPrev = that->mPrev;
+	free(that);
+}
+
+/*******************************************************************************
+ // Free a node
+ *******************************************************************************/
+static void XWBNodeFree(struct XWBNode* that, const char* iName, const char* iFile, const unsigned int iLine) {
+	that->mFile = iFile;
+	that->mLine = iLine;
+	that->mName = iName;
+}
+
+// ===========================================================================================
+
+/*******************************************************************************
  * Allocate memory
  *******************************************************************************/
 void* XWBMalloc(unsigned int iSize, const char* iFile, const unsigned int iLine) {
+
 	register unsigned int usize;
 	unsigned char* result;
 
@@ -211,10 +212,9 @@ char* XWBStrnDup(const char* iOrig, unsigned int iSize, const char* iFile, const
 	char* result;
 	result = XWBMalloc(iSize + 1, iFile, iLine);
 	strncpy(result, iOrig, iSize);
-	result[iSize]=0;
+	result[iSize] = 0;
 	return result;
 }
-
 
 /*******************************************************************************
  * Allocate memory
@@ -376,10 +376,6 @@ void XWBReportFinal(void) {
 	xwbMem.mReport = 0;
 }
 
-
-
-
-
 #undef malloc
 #define malloc(x) XWBMalloc((x), __FILE__, __LINE__)
 
@@ -399,46 +395,42 @@ void XWBReportFinal(void) {
 #undef free
 #define free(x)   XWBFree(x, #x, __FILE__, __LINE__)
 
-
-
-
 #endif /* INCLUDE_CMEMLEAK_H_ */
-
 
 /* ========================================================
  *                         EXEMPLE
  * ========================================================
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <malloc.h>
-#include <assert.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <malloc.h>
+ #include <assert.h>
 
 
-#define MEMLEAK
-#ifdef MEMLEAK
-// #define TRCINFILE
-#ifdef TRCINFILE
-	static const char xwbReportFilename[] = "CMemLeak.txt";
-#endif
-#include "include/cMemLeak.h"
-#endif
+ #define MEMLEAK
+ #ifdef MEMLEAK
+ // #define TRCINFILE
+ #ifdef TRCINFILE
+ static const char xwbReportFilename[] = "CMemLeak.txt";
+ #endif
+ #include "include/cMemLeak.h"
+ #endif
 
-int main(int argc, char **argv) {
+ int main(int argc, char **argv) {
 
-	printf("START %d\n", (10 * sizeof(double)));
+ printf("START %d\n", (10 * sizeof(double)));
 
-	double* tst = (double*) malloc(10 * sizeof(double));
-	double* tst2 = (double*) calloc(10, sizeof(double));
-	free(tst);
-	free(tst2);
+ double* tst = (double*) malloc(10 * sizeof(double));
+ double* tst2 = (double*) calloc(10, sizeof(double));
+ free(tst);
+ free(tst2);
 
-#ifdef MEMLEAK
-	XWBReportFinal();
-#endif
+ #ifdef MEMLEAK
+ XWBReportFinal();
+ #endif
 
-	return 0;
-}
+ return 0;
+ }
 
  * ======================================================== */
