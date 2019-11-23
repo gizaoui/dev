@@ -195,6 +195,28 @@ void* XWBCalloc(unsigned int iNum, unsigned int iSize, const char* iFile, const 
 }
 
 /*******************************************************************************
+ * Duplicate a string
+ *******************************************************************************/
+char* XWBStrDup(const char* iOrig, const char* iFile, const unsigned int iLine) {
+	char* result;
+	result = XWBMalloc(strlen(iOrig) + 1, iFile, iLine);
+	strcpy(result, iOrig);
+	return result;
+}
+
+/*******************************************************************************
+ * Duplicate a string
+ *******************************************************************************/
+char* XWBStrnDup(const char* iOrig, unsigned int iSize, const char* iFile, const unsigned int iLine) {
+	char* result;
+	result = XWBMalloc(iSize + 1, iFile, iLine);
+	strncpy(result, iOrig, iSize);
+	result[iSize]=0;
+	return result;
+}
+
+
+/*******************************************************************************
  * Allocate memory
  *******************************************************************************/
 void* XWBRealloc(void* iPtr, unsigned int iSize, const char* iFile, const unsigned int iLine) {
@@ -348,23 +370,13 @@ void XWBReport(const char* iTag) {
  *******************************************************************************/
 void XWBReportFinal(void) {
 	XWBReport("============= Final Report =============");
-
 #ifdef TRCINFILE
 	fclose(xwbMem.mReport);
 #endif
-
 	xwbMem.mReport = 0;
 }
 
-/*******************************************************************************
- * Duplicate a string
- *******************************************************************************/
-char* XWBStrDup(const char* iOrig, const char* iFile, const unsigned int iLine) {
-	char* result;
-	result = XWBMalloc(strlen(iOrig) + 1, iFile, iLine);
-	strcpy(result, iOrig);
-	return result;
-}
+
 
 
 
@@ -377,6 +389,9 @@ char* XWBStrDup(const char* iOrig, const char* iFile, const unsigned int iLine) 
 #undef _strdup
 #undef strdup
 #define strdup(x) XWBStrDup(x, __FILE__, __LINE__)
+
+#undef strndup
+#define strndup(x,size) XWBStrnDup(x,(size), __FILE__, __LINE__)
 
 #undef realloc
 #define realloc(x,size) XWBRealloc(x,(size),__FILE__,__LINE__)
