@@ -400,7 +400,7 @@ void XWBReportFinal(void) {
 /* ========================================================
  *                         EXEMPLE
  * ========================================================
-
+ 
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
@@ -418,19 +418,35 @@ void XWBReportFinal(void) {
  #endif
 
  int main(int argc, char **argv) {
-
- printf("START %d\n", (10 * sizeof(double)));
-
- double* tst = (double*) malloc(10 * sizeof(double));
- double* tst2 = (double*) calloc(10, sizeof(double));
- free(tst);
- free(tst2);
+ 
+   cJSON *dummyJSON=NULL;
+   cJSON_Hooks *myHookMethods=NULL;
+   const char *dummyStr = "{\"please_parse_me\":\"Okay\"}";
+	
+   printf("START %d\n", (10 * sizeof(double)));
+   
+   double* tst = (double*) malloc(10 * sizeof(double));
+   double* tst2 = (double*) calloc(10, sizeof(double));
+   free(tst);
+   free(tst2);
+   
+   
+   // Gestion des "memory leak" cJSON
+   // https://tonyzhaoroadtoglory.wordpress.com/function-pointer-in-cc-sdk/
+   myHookMethods = (cJSON_Hooks *) malloc(sizeof(cJSON_Hooks));
+   myHookMethods->malloc_fn = selfdefMallocMethod;
+   myHookMethods->free_fn = selfdefFreeMethod;
+   cJSON_InitHooks(myHookMethods);
+   dummyJSON = cJSON_Parse(dummyStr);
+   cJSON_Delete(dummyJSON);
+   free(myHookMethods);
+	
 
  #ifdef MEMLEAK
- XWBReportFinal();
+   XWBReportFinal();
  #endif
 
- return 0;
+  return 0;
  }
 
  * ======================================================== */
