@@ -407,7 +407,6 @@ void XWBReportFinal(void) {
  #include <malloc.h>
  #include <assert.h>
 
-
  #define MEMLEAK
  #ifdef MEMLEAK
  // #define TRCINFILE
@@ -417,13 +416,44 @@ void XWBReportFinal(void) {
  #include "include/cMemLeak.h"
  #endif
 
- int main(int argc, char **argv) {
- 
-   cJSON *dummyJSON=NULL;
-   cJSON_Hooks *myHookMethods=NULL;
+int cnt = 0;
+
+void *selfdefMallocMethod(size_t sz) {
+   void *ptr = malloc(sz);
+   ++cnt;
+   printf("self-defined malloc function is invoked (%p) %d.\n", ptr, cnt);
+   return ptr;
+}
+
+void selfdefFreeMethod(void *ptr) {
+   --cnt;
+   printf("self-defined free function is invoked (%p) %d.\n", ptr, cnt);
+   return free(ptr);
+}
+
+int main(void) {
+
+   char *strDummyJSON = NULL;
+   cJSON *dummyJSON = NULL;
+   cJSON *duplicateJSON = NULL;
+   cJSON_Hooks *myHookMethods = NULL;
    const char *dummyStr = "{\"please_parse_me\":\"Okay\"}";
-	
-   printf("START %d\n", (10 * sizeof(double)));
+
+   myHookMethods = (cJSON_Hooks *) malloc(sizeof(cJSON_Hooks));
+   myHookMethods->malloc_fn = selfdefMallocMethod;
+   myHookMethods->free_fn = selfdefFreeMethod;
+   cJSON_InitHooks(myHookMethods);
+
+   dummyJSON = cJSON_Parse(dummyStr);
+   duplicateJSON = cJSON_Duplicate(dummyJSON,TRUE);
+
+   strDummyJSON = cJSON_Print(duplicateJSON);
+   printf("%s\n", strDummyJSON);
+   cJSON_free(strDummyJSON);
+
+   cJSON_Delete(duplicateJSON);
+   cJSON_Delete(dummyJSON);
+   free(myHookMethods);
    
    double* tst = (double*) malloc(10 * sizeof(double));
    double* tst2 = (double*) calloc(10, sizeof(double));
