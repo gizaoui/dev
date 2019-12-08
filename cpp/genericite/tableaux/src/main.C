@@ -5,6 +5,7 @@
 
 typedef struct ST_TST {
         int i;
+	char *str;
 } St_Tst;
 
 
@@ -69,6 +70,42 @@ int compard(const void * pva, const void *pvb) {
    double *pb = (double*) pvb; // conversion de type
    if(*pa>*pb) return 0;
    else return 1;
+}
+
+void TstStStr(void) {
+	int i = 0;
+
+	St_Tst *stTst = (St_Tst*) malloc(5 * sizeof(St_Tst));
+
+	stTst[0].str = (char*) malloc(10);
+	strcpy(stTst[0].str, "AAAAAA");
+
+	stTst[1].str = (char*) malloc(10);
+	strcpy(stTst[1].str, "CCCCCC");
+
+	stTst[2].str = (char*) malloc(10);
+	strcpy(stTst[2].str, "AAAAAA");
+
+	stTst[3].str = (char*) malloc(10);
+	strcpy(stTst[3].str, "CCCCCC");
+
+	stTst[4].str = (char*) malloc(10);
+	strcpy(stTst[4].str, "AAAAAA");
+
+	qsort(stTst, 5, sizeof(*stTst), compStChar);
+
+	printf(">%s\n", stTst[0].str);
+	for (i = 1; i < 5; ++i) {
+		if (strcmp(stTst[i].str, stTst[i-1].str) != 0) {
+			printf(">%s\n", stTst[i].str);
+		};
+	}
+
+	for (i = 0; i < 5; ++i) {
+		free(stTst[i].str);
+	}
+
+	free(stTst);
 }
 
 // --------------------------------
