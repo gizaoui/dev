@@ -75,20 +75,23 @@ int compard(const void * pva, const void *pvb) {
 void TstStStr(void) {
 	int i = 0;
 
-	St_Tst *stTst = (St_Tst*) malloc(5 * sizeof(St_Tst));
-
+	St_Tst *stTst = (St_Tst*) malloc(sizeof(St_Tst));
 	stTst[0].str = (char*) malloc(10);
 	strcpy(stTst[0].str, "AAAAAA");
 
+	stTst = (St_Tst*) realloc(stTst, 2 * sizeof(St_Tst));
 	stTst[1].str = (char*) malloc(10);
 	strcpy(stTst[1].str, "CCCCCC");
 
+	stTst = (St_Tst*) realloc(stTst, 3 * sizeof(St_Tst));
 	stTst[2].str = (char*) malloc(10);
 	strcpy(stTst[2].str, "AAAAAA");
 
+	stTst = (St_Tst*) realloc(stTst, 4 * sizeof(St_Tst));
 	stTst[3].str = (char*) malloc(10);
 	strcpy(stTst[3].str, "CCCCCC");
 
+	stTst = (St_Tst*) realloc(stTst, 5 * sizeof(St_Tst));
 	stTst[4].str = (char*) malloc(10);
 	strcpy(stTst[4].str, "AAAAAA");
 
